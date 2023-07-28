@@ -16,19 +16,7 @@ const openai = new OpenAIApi(configuration)
 app.post('/testendpoint', async (request, response) => {
   const answers = request.body.answers
 
-  /*
-    const answers = [
-    { line: 'for(let i=0; i<15; i++) {',
-    answer: 'for i from 0 to 15' },
-    { line: 'if(i % 5 === 0) {',
-    answer: 'if i is divisible by 5'},
-    { line: 'console.log(i)',
-    answer: 'print i' }
-    ]
-  */
-
-
-  // avoiding api calls lol
+  /* // hard-coded response when I don't want to make an API call (for testing)
   return response.json({
     grades: [
       {
@@ -48,6 +36,7 @@ app.post('/testendpoint', async (request, response) => {
       }
     ]
   })
+  */
   
   const completion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
