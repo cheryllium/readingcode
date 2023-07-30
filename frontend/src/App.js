@@ -42,68 +42,66 @@ console.log(i)`,
 
 const Line = ({ line, answer, grade, setAnswer, loading }) => {
   return (
-    <tr>
-      <td><pre>{line}</pre></td>
-      <td>
-        {/\w/.test(line)
-         ? <input type='text'
-                  value={answer ? answer : ''}
-                  disabled={loading}
-                  onChange={e => setAnswer(e.target.value)}
-           />
-         : <></>}
-      </td>
-      <td>
-        {grade
-         && <>
-              <b className={grade.correct? "correct" : "incorrect"}>
-                {grade.correct? "Correct" : "Incorrect"}
-              </b>
-              {grade.comments && ` - ${grade.comments}`}
-            </>
-        }
-      </td>
-    </tr>
+    <div className="line">
+      <code>{line}</code>
+      {/\w/.test(line)
+        ? <input type='text'
+          value={answer ? answer : ''}
+          disabled={loading}
+          onChange={e => setAnswer(e.target.value)}
+        />
+        : <></>}
+      <span>
+      {grade
+        && <>
+          <b className={grade.correct ? "correct" : "incorrect"}>
+            {grade.correct ? "Correct" : "Incorrect"}
+          </b>
+          {grade.comments && ` - ${grade.comments}`}
+        </>
+      }
+      </span>
+    </div>
   )
 }
 
 const App = () => {
-  const [ level, setLevel ] = useState(0)
-  const [ lineAnswers, setLineAnswers ] = useState({})
-  const [ grades, setGrades ] = useState([])
-  const [ loading, setLoading ] = useState(false)
-  const [ canMoveOn, setCanMoveOn ] = useState(false)
-  
+  const [level, setLevel] = useState(0)
+  const [lineAnswers, setLineAnswers] = useState({})
+  const [grades, setGrades] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [canMoveOn, setCanMoveOn] = useState(false)
+
   const levelLines = levels[level].split(/\r?\n/)
 
   const handleSetLineAnswer = (lineIndex, answer) => {
     setLineAnswers({ ...lineAnswers, [lineIndex]: answer })
   }
-  
+
   const handleCheckAnswers = (event) => {
     event.preventDefault()
 
     setLoading(true)
 
     const answers = Object.entries(lineAnswers)
-          .sort((a, b) => a[0] > b[0])
-          .map(elem => {
-            return {
-              line: levelLines[Number(elem[0])].trim(),
-              answer: elem[1]
-            }
-          })
+      .sort((a, b) => a[0] > b[0])
+      .map(elem => {
+        return {
+          line: levelLines[Number(elem[0])].trim(),
+          answer: elem[1]
+        }
+      })
 
     apiService.test({ answers }).then(
       data => {
         setGrades(data.grades)
-        
+
         const allCorrect = data.grades.reduce((acc, v) => acc && v.correct, true)
         console.log(allCorrect)
-        if(allCorrect) {
+        if (allCorrect) {
           setCanMoveOn(true)
         }
-        
+
         setLoading(false)
       }
     )
@@ -119,27 +117,28 @@ const App = () => {
   }
 
   return (
-    <form className="main">
+    <div className="main">
+      <form>
       <h1>Reading Code</h1>
       <p>Try to rewrite each line of code below in plain English. Can you pass all {levels.length} levels?</p>
-      
-      <h2>Level {level+1} <span>(out of {levels.length})</span></h2>
-      <table cellSpacing={0}>
-        <tbody>
-          {levelLines.map((line, index) => (
-            <Line line={line}
-                  answer={lineAnswers[index]}
-                  grade={grades.find(g => g.line.trim() === line.trim()) || null}
-                  setAnswer={answer => handleSetLineAnswer(index, answer)}
-                  loading={loading}
-                  key={index} />
-          ))}
-        </tbody>
-      </table>
-      <button onClick={handleCheckAnswers} disabled={loading}>Check answers {loading && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</button>
+
+      <h2>Level {level + 1} <span>(out of {levels.length})</span></h2>
+      <div className="program">
+        {levelLines.map((line, index) => (
+          <Line line={line}
+            answer={lineAnswers[index]}
+            grade={grades.find(g => g.line.trim() === line.trim()) || null}
+            setAnswer={answer => handleSetLineAnswer(index, answer)}
+            loading={loading}
+            key={index} />
+        ))}
+      </div>
+      <button onClick={handleCheckAnswers} disabled={loading}>Check answers {loading && <div className="lds-ring"><div></div><div></div><div></div><div></div></div>}</button>
       {(canMoveOn && level + 1 < levels.length) && <button onClick={goToNextLevel} disabled={loading}>Next level</button>}
-      {canMoveOn && level + 1 === levels.length && <div className="victory"><span className="correct"><b>You did it!</b></span> Congratulations on completing all of the levels! 🎉</div>}
-    </form>
+      {canMoveOn && level + 1 === levels.length && <div className="victory">🎉 <span className="correct"><b>You did it!</b></span> Congratulations on completing all of the levels! 🎉</div>}
+      </form>
+      <footer><a href="https://github.com/cheryllium/readingcode">Github</a> | Made with <a href="https://platform.openai.com/docs/api-reference">ChatGPT API</a></footer>
+    </div>
   )
 }
 
