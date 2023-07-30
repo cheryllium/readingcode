@@ -1,5 +1,33 @@
+html, body {
+    font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+    margin: 0; 
+}
+
+.main {
+    width: 800px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+}
+
+.victory {
+    margin-top: 20px;
+}
+
+h2 span {
+    font-size: 60%; 
+}
+
 pre {
     margin: 0;
+}
+input {
+    min-width: 250px;
+    border-radius: 5px;
+    outline: 0;
+    border: 1px solid #666;
+    padding: 5px;
 }
 
 table {
@@ -7,11 +35,59 @@ table {
     border-radius: 5px;
     margin-bottom: 10px;
 }
-
 table td {
     padding: 5px;
 }
-
 table tr:nth-child(odd) {
     background-color: #eee;
+}
+
+.correct {
+    color: #172;
+}
+.incorrect {
+    color: #732;
+}
+
+button {
+    margin-right: 10px;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 15px;
+  height: 15px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  margin: 2px;
+  border: 2px solid #444;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #444 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

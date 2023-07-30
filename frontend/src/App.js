@@ -4,6 +4,11 @@ import './App.css'
 import apiService from './services/api'
 
 const levels = [
+  `let sum = 2 + 3;`,
+  `let sum = 1 + 2 + 3 + 4 + 5;
+if(sum > 20) {
+  console.log("wow!");
+}`,
   `for(let i=0; i<=15; i++) {
   if(i % 5 === 0) {
     console.log(i)
@@ -18,7 +23,21 @@ console.log(sum)`,
 let b = 40;
 let c = a
 a = b
-b = c`
+b = c`,
+  `function sum(a, b) {
+  return a + b;
+}
+let i = sum(3, 4);
+console.log(i)`,
+  `function closeToZero(a) {
+  return Math.abs(a) < 5;
+}`,
+  `function foo(a) {
+  if(a == 0) {
+    return 0; 
+  }
+  return a + foo(a - 1);
+}`,
 ]
 
 const Line = ({ line, answer, grade, setAnswer, loading }) => {
@@ -37,8 +56,10 @@ const Line = ({ line, answer, grade, setAnswer, loading }) => {
       <td>
         {grade
          && <>
-              <b>{grade.correct? "Correct" : "Incorrect"}</b>
-              {grade.comments && `- ${grade.comments}`}
+              <b className={grade.correct? "correct" : "incorrect"}>
+                {grade.correct? "Correct" : "Incorrect"}
+              </b>
+              {grade.comments && ` - ${grade.comments}`}
             </>
         }
       </td>
@@ -96,24 +117,28 @@ const App = () => {
     setCanMoveOn(false)
     setLevel(level + 1)
   }
-  
+
   return (
-    <form className="problem-form">
-      <h1>Level {level+1}</h1>
+    <form className="main">
+      <h1>Reading Code</h1>
+      <p>Try to rewrite each line of code below in plain English. Can you pass all {levels.length} levels?</p>
+      
+      <h2>Level {level+1} <span>(out of {levels.length})</span></h2>
       <table cellSpacing={0}>
         <tbody>
           {levelLines.map((line, index) => (
             <Line line={line}
                   answer={lineAnswers[index]}
-                  grade={grades[index] || null}
+                  grade={grades.find(g => g.line.trim() === line.trim()) || null}
                   setAnswer={answer => handleSetLineAnswer(index, answer)}
                   loading={loading}
                   key={index} />
           ))}
         </tbody>
       </table>
-      <button onClick={handleCheckAnswers} disabled={loading}>Check answers</button>
-      {canMoveOn && <button onClick={goToNextLevel} disabled={loading}>Next level</button>}
+      <button onClick={handleCheckAnswers} disabled={loading}>Check answers {loading && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</button>
+      {(canMoveOn && level + 1 < levels.length) && <button onClick={goToNextLevel} disabled={loading}>Next level</button>}
+      {canMoveOn && level + 1 === levels.length && <div className="victory"><span className="correct"><b>You did it!</b></span> Congratulations on completing all of the levels! 🎉</div>}
     </form>
   )
 }

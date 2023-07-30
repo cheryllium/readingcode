@@ -13,7 +13,7 @@ const configuration = new Configuration({
 })
 const openai = new OpenAIApi(configuration)
 
-app.post('/testendpoint', async (request, response) => {
+app.post('/check', async (request, response) => {
   const answers = request.body.answers
 
   /* // hard-coded response when I don't want to make an API call (for testing)
