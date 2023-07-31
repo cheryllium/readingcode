@@ -96,7 +96,7 @@ h2 span {
 }
 
 .line span {
-  min-width: 15rem;
+  width: 15rem;
   flex-grow: 1;
   display: inline-block;
   padding-left: 1rem;
