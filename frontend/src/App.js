@@ -92,19 +92,24 @@ const App = () => {
         }
       })
 
-    apiService.test({ answers }).then(
-      data => {
-        setGrades(data.grades)
+    apiService.check({ answers })
+      .then(
+        data => {
+          setGrades(data.grades)
 
-        const allCorrect = data.grades.reduce((acc, v) => acc && v.correct, true)
-        console.log(allCorrect)
-        if (allCorrect) {
-          setCanMoveOn(true)
+          const allCorrect = data.grades.reduce((acc, v) => acc && v.correct, true)
+          console.log(allCorrect)
+          if (allCorrect) {
+            setCanMoveOn(true)
+          }
+
+          setLoading(false)
         }
-
+      )
+      .catch(error => {
         setLoading(false)
-      }
-    )
+        alert('Sorry - There was a problem with the response from the ChatGPT API.')
+      })
   }
 
   const goToNextLevel = (event) => {
