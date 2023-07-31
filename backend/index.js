@@ -7,6 +7,8 @@ const cors = require('cors')
 app.use(cors())
 app.use(express.json())
 
+app.use(express.static('build'))
+
 const { Configuration, OpenAIApi } = require('openai')
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,28 +18,6 @@ const openai = new OpenAIApi(configuration)
 app.post('/check', async (request, response) => {
   const answers = request.body.answers
 
-  /* // hard-coded response when I don't want to make an API call (for testing)
-  return response.json({
-    grades: [
-      {
-        line: 'for(let i=0; i<15; i++) {',
-        correct: true,
-        comments: 'The explanation accurately states that the for loop iterates for i from 0 to 15'
-      },
-      {
-        line: 'if(i % 5 === 0) {',
-        correct: false,
-        comments: 'The explanation is inaccurate'
-      },
-      {
-        line: 'console.log(i)',
-        correct: true,
-        comments: 'The explanation is true'
-      }
-    ]
-  })
-  */
-  
   const completion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
     messages: [
@@ -87,10 +67,9 @@ app.post('/check', async (request, response) => {
     return response.json(completionArguments)
   } else {
     const completionText = completion.data.choices[0].message.content
-    console.log('completionText', completionText)
+    console.log('completionText received', completionText)
+    response.status(500).json({ error: "Invalid response received from ChatGPT API" })
   }
-
-  response.send('<h1>hello world</h1>')
 })
 
 app.listen(3001, () => {
