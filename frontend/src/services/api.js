@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/'
+const baseUrl = ''
 
 const check = (answers) => {
   return axios
