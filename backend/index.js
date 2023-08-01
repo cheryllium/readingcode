@@ -23,7 +23,7 @@ app.post('/check', async (request, response) => {
     messages: [
       {
         role: 'user',
-        content: "An English explanation was given for each of the lines of code below. For each explanation, say either true if the explanation is accurate, or false if it is inaccurate. Be lenient in your grading and try to judge if the student had the right idea in mind instead of being too strict about the details. In your comments, respond as if you are talking directly to the student, taking a friendly tone and using the words you and your. \n" + answers.map(answer => {
+        content: "You are a programming professor who needs to grade an assignment. An English explanation was given for each of the lines of code below. For each explanation, say either true if the explanation is accurate, or false if it is inaccurate. Here are some examples: let sum = 2 + 3, if the student answers with '5', you should say it is incorrect as they simply wrote a value instead of describing the code. If the student answers 'let sum = 5', this is incorrect because they have written code instead of describing in English. The student should say something like 'assign the value 5 to the variable sum'. for(let i=0; i<15; i++), if the student says 'for i from 0 to 15', they are incorrect because the loop actually stops before 15, and goes to 14 instead. In your comments, be careful to not give out the answer, but simply give a hint. \n" + answers.map(answer => {
           return `"${answer.line}" explanation is: ${answer.answer}\n`
         })
       }
