@@ -15,6 +15,8 @@ const configuration = new Configuration({
 })
 const openai = new OpenAIApi(configuration)
 
+console.log('API_KEY', process.env.OPENAI_API_KEY)
+
 app.post('/check', async (request, response) => {
   const answers = request.body.answers
 
